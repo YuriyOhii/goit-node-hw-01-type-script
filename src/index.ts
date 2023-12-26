@@ -1,51 +1,42 @@
-// import { program } from "commander";
+import { OptionValues, program } from "commander";
 import * as conactsServices from "./contacts.js";
-import { Contact } from "./types.js";
+import { Action, Contact } from "./types.js";
 
-const contactsList = await conactsServices.listContacts();
-console.log(contactsList);
-console.log("----------------------------------------");
-const contact = await conactsServices.getContactById("AeHIrLTr6JkxGE6SN-0Rw");
-console.log(contact);
-console.log("----------------------------------------");
-const deletedContact = await conactsServices.removeContact(
-  "AeHIrLTr6JkxGE6SN-0Rw"
-);
-console.log(deletedContact);
+program
+  .option("-a, --action <type>", "choose action")
+  .option("-i, --id <id>", "user id")
+  .option("-n, --name <name>", "user name")
+  .option("-e, --email <email>", "user email")
+  .option("-p, --phone <phone>", "user phone");
 
-// program
-//   .option("-a, --action <type>", "choose action")
-//   .option("-i, --id <type>", "user id")
-//   .option("-n, --name <type>", "user name")
-//   .option("-e, --email <type>", "user email")
-//   .option("-p, --phone <type>", "user phone");
+program.parse();
 
-// program.parse();
+const argv: OptionValues & { action: Action } = program.opts();
 
-// const argv = program.opts();
+async function invokeAction(arg: OptionValues): Promise<void> {
+  const { action, id, name, email, phone } = arg;
+  const data: Omit<Contact, "id"> = { name, email, phone };
+  switch (action) {
+    case "list":
+      const contactsList: Contact[] = await conactsServices.listContacts();
+      return console.log(contactsList);
 
-// // TODO: рефакторити
-// async function invokeAction({ action, id, ...data }) {
-//   switch (action) {
-//     case "list":
-//       const contactsList = await conactsServices.listContacts();
-//       return console.log(contactsList);
+    case "get":
+      const contact: Contact | null = await conactsServices.getContactById(id);
+      return console.log(contact);
 
-//     case "get":
-//       const contact = await conactsServices.getContactById(id);
-//       return console.log(contact);
+    case "add":
+      const newContact: Contact = await conactsServices.addContact(data);
+      return console.log(newContact);
 
-//     case "add":
-//       const newContact = await conactsServices.addContact(data);
-//       return console.log(newContact);
+    case "remove":
+      const deletedContact: Contact | null =
+        await conactsServices.removeContact(id);
+      return console.log(deletedContact);
 
-//     case "remove":
-//       const deletedContact = await conactsServices.removeContact(id);
-//       return console.log(deletedContact);
+    default:
+      console.warn("\x1B[31m Unknown action type!");
+  }
+}
 
-//     default:
-//       console.warn("\x1B[31m Unknown action type!");
-//   }
-// }
-
-// invokeAction(argv);
+invokeAction(argv);
