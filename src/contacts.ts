@@ -6,8 +6,8 @@ import { Contact } from "./types.js";
 
 
 const contactsPath: string = path.resolve("src", "db", "contacts.json");
-// const updateContacts = async (data) =>
-//   fs.writeFile(contactsPath, JSON.stringify(data, null, 2));
+const updateContacts = async (data: Contact[]): Promise<void> =>
+  fs.writeFile(contactsPath, JSON.stringify(data, null, 2));
 
 export async function listContacts(): Promise<Contact[]> {
   
@@ -17,21 +17,21 @@ export async function listContacts(): Promise<Contact[]> {
 }
 
 export async function getContactById (contactId: string): Promise<Contact | null> {
-  const contacts = await listContacts();
+  const contacts: Contact[] = await listContacts();
   const contact: Contact | undefined = contacts.find(({ id }) => contactId === id);
   return contact || null;
 }
 
-// export async function removeContact(contactId) {
-//   const contacts = await listContacts();
-//   const idx = contacts.findIndex(({ id }) => id === contactId);
-//   if (idx === -1) {
-//     return null;
-//   }
-//   const [deletedContact] = contacts.splice(idx, 1);
-//   updateContacts(contacts);
-//   return deletedContact;
-// }
+export async function removeContact(contactId: string):Promise<null| Contact> {
+  const contacts: Contact[] = await listContacts();
+  const idx: number = contacts.findIndex(({ id }) => id === contactId);
+  if (idx === -1) {
+    return null;
+  }
+  const [deletedContact] = contacts.splice(idx, 1);
+  updateContacts(contacts);
+  return deletedContact;
+}
 
 // export async function addContact(data) {
 //   const contacts = await listContacts();

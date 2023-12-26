@@ -4,11 +4,14 @@ import { Contact } from "./types.js";
 
 const contactsList = await conactsServices.listContacts();
 console.log(contactsList);
-console.log("----------------------------------------")
+console.log("----------------------------------------");
 const contact = await conactsServices.getContactById("AeHIrLTr6JkxGE6SN-0Rw");
- console.log(contact);
-
-
+console.log(contact);
+console.log("----------------------------------------");
+const deletedContact = await conactsServices.removeContact(
+  "AeHIrLTr6JkxGE6SN-0Rw"
+);
+console.log(deletedContact);
 
 // program
 //   .option("-a, --action <type>", "choose action")
