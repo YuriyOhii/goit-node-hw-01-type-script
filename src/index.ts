@@ -1,7 +1,14 @@
 // import { program } from "commander";
 import * as conactsServices from "./contacts.js";
+import { Contact } from "./types.js";
+
 const contactsList = await conactsServices.listContacts();
 console.log(contactsList);
+console.log("----------------------------------------")
+const contact = await conactsServices.getContactById("AeHIrLTr6JkxGE6SN-0Rw");
+ console.log(contact);
+
+
 
 // program
 //   .option("-a, --action <type>", "choose action")

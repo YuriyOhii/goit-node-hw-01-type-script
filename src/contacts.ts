@@ -2,12 +2,8 @@ import fs from "fs/promises";
 import path from "path";
 import { nanoid } from "nanoid";
 
-interface Contact {
-  id: string,
-  name: string,
-  email: string,
-  phone: string,
-}
+import { Contact } from "./types.js";
+
 
 const contactsPath: string = path.resolve("src", "db", "contacts.json");
 // const updateContacts = async (data) =>
@@ -20,11 +16,11 @@ export async function listContacts(): Promise<Contact[]> {
   return parsedContacts;
 }
 
-// export async function getContactById(contactId) {
-//   const contacts = await listContacts();
-//   const contact = contacts.find(({ id }) => contactId === id);
-//   return contact || null;
-// }
+export async function getContactById (contactId: string): Promise<Contact | null> {
+  const contacts = await listContacts();
+  const contact: Contact | undefined = contacts.find(({ id }) => contactId === id);
+  return contact || null;
+}
 
 // export async function removeContact(contactId) {
 //   const contacts = await listContacts();
